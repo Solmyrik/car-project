@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f5f5f5;
+        overflow-x: hidden;
+      }
+      .container {
+        max-width: 100%;
+        margin: 0 auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        overflow-x: hidden;
+      }
+      .table-container {
+        width: 100%;
+        position: relative;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .price-box {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+      }
+      .title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      .price-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      .price-table th {
+        background-color: #f5b754;
+        color: white;
+        padding: 15px;
+        text-align: left;
+        font-weight: 600;
+        position: relative;
+      }
+      .price-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #eee;
+      }
+      .price-table tr:hover {
+        background-color: #fff9e6;
+        cursor: pointer;
+      }
+      .price_un_nds {
+        color: #666;
+        font-size: 0.9em;
+      }
+      .price_nds {
+        color: #333;
+        font-weight: bold;
+      }
+      .capt_type {
+        font-size: 0.8em;
+        color: #666;
+        margin-top: 5px;
+      }
+      .helper {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        background-color: rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        text-align: center;
+        line-height: 18px;
+        margin-left: 5px;
+        color: white;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+        vertical-align: middle;
+        position: relative;
+      }
+      .helper:hover {
+        background-color: rgba(255, 255, 255, 0.5);
+      }
+      .helper::after {
+        content: attr(data-help);
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 8px 12px;
+        background-color: #333;
+        color: white;
+        font-size: 14px;
+        font-weight: normal;
+        border-radius: 4px;
+        white-space: nowrap;
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.3s, visibility 0.3s;
+        z-index: 1000;
+        width: max-content;
+        max-width: 300px;
+        margin-bottom: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+      .helper::before {
+        content: '';
+        position: absolute;
+        bottom: calc(100% - 5px);
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 5px;
+        border-style: solid;
+        border-color: #333 transparent transparent transparent;
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.3s, visibility 0.3s;
+        z-index: 1000;
+      }
+      .helper:hover::after,
+      .helper:hover::before {
+        visibility: visible;
+        opacity: 1;
+      }
+      @media (max-width: 768px) {
+        .my_hidden-xs {
+          display: none;
+        }
+        .my_visible-xs {
+          display: block;
+        }
+        .price-table td {
+          padding: 10px;
+        }
+        .head_price_mob {
+          display: block;
+          font-size: 0.9em;
+        }
+        .head_price_pro {
+          display: none;
+        }
+      }
+      @media (min-width: 769px) {
+        .my_visible-xs {
+          display: none;
+        }
+      }
+      .clearfix {
+        margin: 20px 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+      .icon-text {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        padding: 15px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+      .icon-box {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f5b754;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .icon-box svg {
+        width: 24px;
+        height: 24px;
+        fill: white;
+      }
+      .custom-radio {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        margin-right: 15px;
+      }
+      .custom-radio input[type='radio'] {
+        display: none;
+      }
+      .custom-radio span {
+        width: 18px;
+        height: 18px;
+        border: 2px solid #f5b754;
+        border-radius: 50%;
+        display: inline-block;
+        position: relative;
+      }
+      .custom-radio input[type='radio']:checked + span::after {
+        content: '';
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: #f5b754;
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      @media (max-width: 767px) {
+        .table-container {
+          overflow: auto;
+          margin: 0 -20px;
+          padding: 0 20px;
+          width: calc(100% + 40px);
+        }
+        table {
+          min-width: 1200px;
+        }
+      }
+    </style>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const radioButtons = document.querySelectorAll('input[name="nds_price"]');
+        const originalPrices = new Map();
+
+        // Сохраняем оригинальные цены
+        document.querySelectorAll('.price_un_nds').forEach((element) => {
+          const price = parseFloat(element.textContent.replace(/\s+/g, ''));
+          originalPrices.set(element, price);
+        });
+
+        function updatePrices(withNDS) {
+          document.querySelectorAll('.price_un_nds').forEach((element) => {
+            const originalPrice = originalPrices.get(element);
+            const newPrice = withNDS ? originalPrice * 1.2 : originalPrice;
+            element.textContent = newPrice.toLocaleString('ru-RU');
+          });
+        }
+
+        radioButtons.forEach((radio) => {
+          radio.addEventListener('change', function () {
+            updatePrices(this.value === 'nds');
+          });
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <section>
+      <div class="price-box">
+        <div class="title">Автовышки</div>
+
+        <div class="my_hidden-xs">
+          <div class="sk-hor">
+            <div class="table-container">
+              <table class="price-table">
+                <thead class="offset_price">
+                  <tr>
+                    <th rowspan="2" class="max_h_pr">
+                      Максимальная высота, (м)
+                      <a
+                        href="#"
+                        class="helper"
+                        data-help="Максимальное расстояние от земли до пола люльки, плюс 2,0 м."
+                        >?</a
+                      >
+                    </th>
+                    <th rowspan="2" class="max_g_pr">
+                      Груз-ость люльки, (кг)
+                      <a
+                        href="#"
+                        class="helper"
+                        data-help="Максимальная масса поднимаемого груза в люльке (включая вес людей)"
+                        >?</a
+                      >
+                    </th>
+                    <th rowspan="2" class="max_g_pr">
+                      Смена (руб)
+                      <a
+                        href="#"
+                        class="helper"
+                        data-help="Минимальная смена - 8 часов (7 часов работы + 1 час подачи)"
+                        >?</a
+                      >
+                    </th>
+                    <!-- <th class="max_g_pr">Цена внутри ТТК <a href="#" class="helper" data-help="Стоимость работы автовышки Москве внутри третьего транспортного кольца."></a></th> -->
+                    <th rowspan="2" class="max_g_pr">
+                      Час (руб) <br /><a
+                        href="#"
+                        class="helper"
+                        style="margin-top: 5px"
+                        data-help="Стоимость одного часа переработки сверх смены."
+                        >?</a
+                      >
+                    </th>
+                    <th rowspan="2" class="max_g_pr">
+                      Пробег за МКАД 1км (руб)<a
+                        href="#"
+                        class="helper"
+                        data-help="Пробег за МКАД до 10 км бесплатно, свыше 10 км заказчик
+оплачивает весь пробег (до объекта и обратно)."
+                        >?</a
+                      >
+                    </th>
+                  </tr>
+                  <!-- <tr>
+                                <th>Смена (руб)</th>
+                                <th>Смена (руб)</th>
+                            </tr> -->
+                </thead>
+                <thead class="offset_price none_tr" style="top: 0px; display: none">
+                  <tr>
+                    <th rowspan="2" class="max_h_pr">
+                      Максимальная высота, (м)
+                      <a
+                        href="#"
+                        class="helper"
+                        data-help="Максимальное расстояние от земли до пола люльки, плюс 2,0 м."
+                        >?</a
+                      >
+                    </th>
+                    <th rowspan="2" class="max_g_pr">
+                      Груз-ость люльки, (кг)
+                      <a
+                        href="#"
+                        class="helper"
+                        data-help="Максимальная масса поднимаемого груза в люльке (включая вес людей)"
+                        >?</a
+                      >
+                    </th>
+                    <th rowspan="2" class="max_g_pr">
+                      Смена (руб)
+                      <a
+                        href="#"
+                        class="helper"
+                        data-help="Минимальная смена - 8 часов (7 часов работы + 1 час подачи)"
+                        >?</a
+                      >
+                    </th>
+                    <!-- <th class="max_g_pr">Цена внутри ТТК <a href="#" class="helper" data-help="Стоимость работы автовышки Москве внутри третьего транспортного кольца."></a></th> -->
+                    <th rowspan="2" class="max_g_pr">
+                      Час (руб) <br /><a
+                        href="#"
+                        class="helper"
+                        style="margin-top: 5px"
+                        data-help="Стоимость одного часа переработки сверх смены."
+                        >?</a
+                      >
+                    </th>
+                    <th rowspan="2" class="max_g_pr">
+                      Пробег за МКАД 1км (руб)<a
+                        href="#"
+                        class="helper"
+                        data-help="Пробег за МКАД до 10 км бесплатно, свыше 10 км заказчик
+оплачивает весь пробег (до объекта и обратно)."
+                        >?</a
+                      >
+                    </th>
+                  </tr>
+                  <!-- <tr>
+                                <th>Смена (руб)</th>
+                                <th>Смена (руб)</th>
+                            </tr> -->
+                </thead>
+                <tbody class="table_is">
+                  <tr id="bx_651765591_94">
+                    <td style="position: relative">17</td>
+                    <td>200</td>
+                    <td>
+                      <div class="price_un_nds">15 000</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">1 875</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">65</div>
+                    </td>
+                  </tr>
+                  <tr id="bx_651765591_95">
+                    <td style="position: relative">
+                      17
+                      <div class="capt_type">Балкон 4м*2м</div>
+                    </td>
+                    <td>800</td>
+                    <td>
+                      <div class="price_un_nds">17 680</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">2 210</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">70</div>
+                    </td>
+                  </tr>
+                  <tr id="bx_651765591_96">
+                    <td style="position: relative">20</td>
+                    <td>200</td>
+                    <td>
+                      <div class="price_un_nds">15 600</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">1 950</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">65</div>
+                    </td>
+                  </tr>
+                  <tr id="bx_651765591_97">
+                    <td style="position: relative">
+                      20
+                      <div class="capt_type">Балкон 4м*2м</div>
+                    </td>
+                    <td>800</td>
+                    <td>
+                      <div class="price_un_nds">19 200</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">2 400</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">70</div>
+                    </td>
+                  </tr>
+                  <tr id="bx_651765591_98">
+                    <td style="position: relative">22</td>
+                    <td>200</td>
+                    <td>
+                      <div class="price_un_nds">16 000</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">2 000</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">65</div>
+                    </td>
+                  </tr>
+                  <tr id="bx_651765591_116">
+                    <td style="position: relative">
+                      22
+                      <div class="capt_type">Балкон 4м*2м</div>
+                    </td>
+                    <td>1 000</td>
+                    <td>
+                      <div class="price_un_nds">20 000</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">2 500</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">70</div>
+                    </td>
+                  </tr>
+                  <tr id="bx_651765591_117">
+                    <td style="position: relative">25</td>
+                    <td>200</td>
+                    <td>
+                      <div class="price_un_nds">17 600</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">2 200</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">65</div>
+                    </td>
+                  </tr>
+                  <tr id="bx_651765591_197">
+                    <td style="position: relative">28</td>
+                    <td>250</td>
+                    <td>
+                      <div class="price_un_nds">18 400</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">2 300</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">70</div>
+                    </td>
+                  </tr>
+                  <tr id="bx_651765591_103">
+                    <td style="position: relative">29</td>
+                    <td>200</td>
+                    <td>
+                      <div class="price_un_nds">19 000</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">2 375</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">70</div>
+                    </td>
+                  </tr>
+                  <tr id="bx_651765591_104">
+                    <td style="position: relative">32</td>
+                    <td>300</td>
+                    <td>
+                      <div class="price_un_nds">20 000</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">2 500</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">70</div>
+                    </td>
+                  </tr>
+                  <tr id="bx_651765591_106">
+                    <td style="position: relative">
+                      32
+                      <div class="capt_type">Вездеход</div>
+                    </td>
+                    <td>300</td>
+                    <td>
+                      <div class="price_un_nds">27 400</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">3 425</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">100</div>
+                    </td>
+                  </tr>
+                  <tr id="bx_651765591_107">
+                    <td style="position: relative">35</td>
+                    <td>300</td>
+                    <td>
+                      <div class="price_un_nds">23 000</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">2 875</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">70</div>
+                    </td>
+                  </tr>
+                  <tr id="bx_651765591_187">
+                    <td style="position: relative">
+                      35
+                      <div class="capt_type">Вездеход</div>
+                    </td>
+                    <td>400</td>
+                    <td>
+                      <div class="price_un_nds">30 000</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">3 750</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">100</div>
+                    </td>
+                  </tr>
+                  <tr id="bx_651765591_142">
+                    <td style="position: relative">40</td>
+                    <td>400</td>
+                    <td>
+                      <div class="price_un_nds">25 000</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">3 125</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">80</div>
+                    </td>
+                  </tr>
+                  <tr id="bx_651765591_185">
+                    <td style="position: relative">
+                      40
+                      <div class="capt_type">Вездеход</div>
+                    </td>
+                    <td>400</td>
+                    <td>
+                      <div class="price_un_nds">32 800</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">4 100</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">100</div>
+                    </td>
+                  </tr>
+                  <tr id="bx_651765591_172">
+                    <td style="position: relative">45</td>
+                    <td>300</td>
+                    <td>
+                      <div class="price_un_nds">28 400</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">3 550</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">80</div>
+                    </td>
+                  </tr>
+                  <tr id="bx_651765591_165">
+                    <td style="position: relative">
+                      45
+                      <div class="capt_type">Вездеход</div>
+                    </td>
+                    <td>400</td>
+                    <td>
+                      <div class="price_un_nds">38 000</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">4 750</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">100</div>
+                    </td>
+                  </tr>
+                  <tr id="bx_651765591_109">
+                    <td style="position: relative">48</td>
+                    <td>400</td>
+                    <td>
+                      <div class="price_un_nds">34 600</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">4 325</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">100</div>
+                    </td>
+                  </tr>
+                  <tr id="bx_651765591_144">
+                    <td style="position: relative">50</td>
+                    <td>500</td>
+                    <td>
+                      <div class="price_un_nds">35 600</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">4 450</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">100</div>
+                    </td>
+                  </tr>
+                  <tr id="bx_651765591_145">
+                    <td style="position: relative">52</td>
+                    <td>500</td>
+                    <td>
+                      <div class="price_un_nds">38 000</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">4 750</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">100</div>
+                    </td>
+                  </tr>
+                  <tr id="bx_651765591_111">
+                    <td style="position: relative">60</td>
+                    <td>500</td>
+                    <td>
+                      <div class="price_un_nds">53 200</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">6 650</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">100</div>
+                    </td>
+                  </tr>
+                  <tr id="bx_651765591_195">
+                    <td style="position: relative">Машина прикрытия легковая</td>
+                    <td>-</td>
+                    <td>
+                      <div class="price_un_nds">12 000</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">1 500</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">45</div>
+                    </td>
+                  </tr>
+                  <tr id="bx_651765591_202">
+                    <td style="position: relative">Машина прикрытия грузовая</td>
+                    <td>-</td>
+                    <td>
+                      <div class="price_un_nds">14 000</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">1 750</div>
+                    </td>
+                    <td>
+                      <div class="price_un_nds">45</div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="my_visible-xs">
+          <table class="price-table">
+            <tbody></tbody>
+            <thead class="head_price">
+              <tr>
+                <th>
+                  <div class="head_price_pro">
+                    Высота, (м)
+                    <a
+                      href="#"
+                      class="helper"
+                      data-help="Цена в Москве от Третьего транспортного кольца до МКАД"
+                      >?</a
+                    >
+                  </div>
+                  <div class="head_price_mob">Высота</div>
+                </th>
+                <th class="th_mobile">
+                  <div class="head_price_pro">
+                    Грузоподъемность, (кг)
+                    <a
+                      href="#"
+                      class="helper"
+                      data-help="Цена в Москве от Третьего транспортного кольца до МКАД"
+                      >?</a
+                    >
+                  </div>
+                  <div class="head_price_mob">
+                    <img src="/bitrix/templates/general_sky/img/gruzblack.png" />
+                  </div>
+                </th>
+                <th>
+                  <div class="head_price_pro">Смена (руб)</div>
+                  <div class="head_price_mob">Смена (руб)</div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr id="bx_651765591_94">
+                <td style="padding: 10px 5px; width: 30%; position: relative">17</td>
+                <td>200</td>
+                <td>
+                  <div class="price_un_nds">15 000</div>
+                </td>
+              </tr>
+              <tr id="bx_651765591_95">
+                <td style="padding: 10px 5px; width: 30%; position: relative">
+                  17
+                  <div class="capt_type">Балкон 4м*2м</div>
+                </td>
+                <td>800</td>
+                <td>
+                  <div class="price_un_nds">17 680</div>
+                </td>
+              </tr>
+              <tr id="bx_651765591_96">
+                <td style="padding: 10px 5px; width: 30%; position: relative">20</td>
+                <td>200</td>
+                <td>
+                  <div class="price_un_nds">15 600</div>
+                </td>
+              </tr>
+              <tr id="bx_651765591_97">
+                <td style="padding: 10px 5px; width: 30%; position: relative">
+                  20
+                  <div class="capt_type">Балкон 4м*2м</div>
+                </td>
+                <td>800</td>
+                <td>
+                  <div class="price_un_nds">19 200</div>
+                </td>
+              </tr>
+              <tr id="bx_651765591_98">
+                <td style="padding: 10px 5px; width: 30%; position: relative">22</td>
+                <td>200</td>
+                <td>
+                  <div class="price_un_nds">16 000</div>
+                </td>
+              </tr>
+              <tr id="bx_651765591_116">
+                <td style="padding: 10px 5px; width: 30%; position: relative">
+                  22
+                  <div class="capt_type">Балкон 4м*2м</div>
+                </td>
+                <td>1 000</td>
+                <td>
+                  <div class="price_un_nds">20 000</div>
+                </td>
+              </tr>
+              <tr id="bx_651765591_117">
+                <td style="padding: 10px 5px; width: 30%; position: relative">25</td>
+                <td>200</td>
+                <td>
+                  <div class="price_un_nds">17 600</div>
+                </td>
+              </tr>
+              <tr id="bx_651765591_197">
+                <td style="padding: 10px 5px; width: 30%; position: relative">28</td>
+                <td>250</td>
+                <td>
+                  <div class="price_un_nds">18 400</div>
+                </td>
+              </tr>
+              <tr id="bx_651765591_103">
+                <td style="padding: 10px 5px; width: 30%; position: relative">29</td>
+                <td>200</td>
+                <td>
+                  <div class="price_un_nds">19 000</div>
+                </td>
+              </tr>
+              <tr id="bx_651765591_104">
+                <td style="padding: 10px 5px; width: 30%; position: relative">32</td>
+                <td>300</td>
+                <td>
+                  <div class="price_un_nds">20 000</div>
+                </td>
+              </tr>
+              <tr id="bx_651765591_106">
+                <td style="padding: 10px 5px; width: 30%; position: relative">
+                  32
+                  <div class="capt_type">Вездеход</div>
+                </td>
+                <td>300</td>
+                <td>
+                  <div class="price_un_nds">27 400</div>
+                </td>
+              </tr>
+              <tr id="bx_651765591_107">
+                <td style="padding: 10px 5px; width: 30%; position: relative">35</td>
+                <td>300</td>
+                <td>
+                  <div class="price_un_nds">23 000</div>
+                </td>
+              </tr>
+              <tr id="bx_651765591_187">
+                <td style="padding: 10px 5px; width: 30%; position: relative">
+                  35
+                  <div class="capt_type">Вездеход</div>
+                </td>
+                <td>400</td>
+                <td>
+                  <div class="price_un_nds">30 000</div>
+                </td>
+              </tr>
+              <tr id="bx_651765591_142">
+                <td style="padding: 10px 5px; width: 30%; position: relative">40</td>
+                <td>400</td>
+                <td>
+                  <div class="price_un_nds">25 000</div>
+                </td>
+              </tr>
+              <tr id="bx_651765591_185">
+                <td style="padding: 10px 5px; width: 30%; position: relative">
+                  40
+                  <div class="capt_type">Вездеход</div>
+                </td>
+                <td>400</td>
+                <td>
+                  <div class="price_un_nds">32 800</div>
+                </td>
+              </tr>
+              <tr id="bx_651765591_172">
+                <td style="padding: 10px 5px; width: 30%; position: relative">45</td>
+                <td>300</td>
+                <td>
+                  <div class="price_un_nds">28 400</div>
+                </td>
+              </tr>
+              <tr id="bx_651765591_165">
+                <td style="padding: 10px 5px; width: 30%; position: relative">
+                  45
+                  <div class="capt_type">Вездеход</div>
+                </td>
+                <td>400</td>
+                <td>
+                  <div class="price_un_nds">38 000</div>
+                </td>
+              </tr>
+              <tr id="bx_651765591_109">
+                <td style="padding: 10px 5px; width: 30%; position: relative">48</td>
+                <td>400</td>
+                <td>
+                  <div class="price_un_nds">34 600</div>
+                </td>
+              </tr>
+              <tr id="bx_651765591_144">
+                <td style="padding: 10px 5px; width: 30%; position: relative">50</td>
+                <td>500</td>
+                <td>
+                  <div class="price_un_nds">35 600</div>
+                </td>
+              </tr>
+              <tr id="bx_651765591_145">
+                <td style="padding: 10px 5px; width: 30%; position: relative">52</td>
+                <td>500</td>
+                <td>
+                  <div class="price_un_nds">38 000</div>
+                </td>
+              </tr>
+              <tr id="bx_651765591_111">
+                <td style="padding: 10px 5px; width: 30%; position: relative">60</td>
+                <td>500</td>
+                <td>
+                  <div class="price_un_nds">53 200</div>
+                </td>
+              </tr>
+              <tr id="bx_651765591_195">
+                <td style="padding: 10px 5px; width: 30%; position: relative">
+                  Машина прикрытия легковая
+                </td>
+                <td>0</td>
+                <td>
+                  <div class="price_un_nds">12 000</div>
+                </td>
+              </tr>
+              <tr id="bx_651765591_202">
+                <td style="padding: 10px 5px; width: 30%; position: relative">
+                  Машина прикрытия грузовая
+                </td>
+                <td>0</td>
+                <td>
+                  <div class="price_un_nds">14 000</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="clearfix">
+          <div class="col-md-6 col-sm-6 icon-text">
+            <div class="icon-box">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"
+                />
+              </svg>
+            </div>
+            <div>
+              <label style="margin-bottom: 5px" class="custom-radio">
+                <input
+                  type="radio"
+                  name="nds_price"
+                  value="w_nds"
+                  class="radio_unds_price radio_nds_price_info checked_on"
+                  checked
+                />
+                <span></span>
+                без НДС
+              </label>
+
+              <label class="custom-radio">
+                <input
+                  type="radio"
+                  name="nds_price"
+                  value="nds"
+                  class="radio_nds_price radio_nds_price_info"
+                />
+                <span></span>
+                с НДС
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="clearfix">
+          <div class="col-md-6 col-sm-6 icon-text">
+            <div class="icon-box">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"
+                />
+              </svg>
+            </div>
+            <div>Цены действительны с 14.02.2025 г.</div>
+          </div>
+          <div class="col-md-6 col-sm-6 icon-text">
+            <div class="icon-box">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"
+                />
+              </svg>
+            </div>
+            <div>При опиловке деревьев берется дополнительный час подачи</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
